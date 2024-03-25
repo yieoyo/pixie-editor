@@ -59,70 +59,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://unpkg.com/magic-wand-tool@latest/dist/magic-wand.min.js"></script>
     <script>
-      const pixie = new Pixie({
-        selector: "#editor-container",
-        baseUrl: "assets",
-        image: "assets/images/samples/sample1.jpg",
-        ui: {
-          menubar: {
-            items: [
-              {
-                type: "button",
-                icon: [
-                  {
-                    tag: "path",
-                    attr: {
-                      d: "m11.99 18.54-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16zm0-11.47L17.74 9 12 13.47 6.26 9 12 4.53z",
-                    },
-                  },
-                ],
-                align: "right",
-                position: 0,
-                action: (editor) => {
-                  editor.togglePanel("objects");
-                },
-              },
-              {
-                type: "button",
-                icon: [
-                  {
-                    tag: "path",
-                    attr: {
-                      d: "M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z",
-                    },
-                  },
-                ],
-                align: "left",
-                buttonVariant: "outline",
-                menuItems: [
-                  {
-                    action: (editor) => {
-                      editor.tools.import.uploadAndReplaceMainImage();
-                    },
-                    label: "Background Image",
-                  },
-                  {
-                    action: (editor) => {
-                      editor.tools.import.uploadAndAddImage();
-                    },
-                    label: "Overlay Image",
-                  },
-                  {
-                    action: (editor) => {
-                      editor.tools.import.uploadAndOpenStateFile();
-                    },
-                    label: "Editor Project File",
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      });
-      window.pixie = pixie;
-    </script>
-
-    <script>
       document.addEventListener("DOMContentLoaded", function () {
         let zNavbar = document.querySelector(".z-navbar");
         const magicBoxContainer = document.createElement("div");
@@ -200,28 +136,22 @@
           reader.readAsDataURL(inp.files[0]);
         }
       }
-      function initCanvas(img) {
+      function initCanvas() {
         // var cvs = document.querySelector(".upper-canvas");
         var cvs = document.querySelector(".upper-canvas");
-        cvs.width = img.width;
-        cvs.height = img.height;
         imageInfo = {
-          width: img.width,
-          height: img.height,
+          width: cvs.width,
+          height: cvs.height,
           context: cvs.getContext("2d"),
         };
-        mask = null;
-
-        var tempCtx = document.createElement("canvas").getContext("2d");
-        tempCtx.canvas.width = imageInfo.width;
-        tempCtx.canvas.height = imageInfo.height;
-        tempCtx.drawImage(img, 0, 0);
-        imageInfo.data = tempCtx.getImageData(
+        imageInfo.data = cvs.getContext("2d").getImageData(
           0,
           0,
           imageInfo.width,
           imageInfo.height
         );
+        mask = null;
+        
       }
       function getMousePosition(e) {
         var p = $(e.target).offset(),
@@ -283,8 +213,10 @@
           "Threshold: " + currentThreshold;
       }
       function drawMask(x, y) {
+        // alert(imageInfo);
         if (!imageInfo) return;
 
+        // alert(y+'y');
         showThreshold();
 
         var image = {
@@ -480,8 +412,76 @@
           bounds: b,
         };
       }
-
-    
     </script>
+
+
+    <script>
+      const pixie = new Pixie({
+        selector: "#editor-container",
+        baseUrl: "assets",
+        image: "assets/images/samples/sample1.jpg",
+        ui: {
+          menubar: {
+            items: [
+              {
+                type: "button",
+                icon: [
+                  {
+                    tag: "path",
+                    attr: {
+                      d: "m11.99 18.54-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16zm0-11.47L17.74 9 12 13.47 6.26 9 12 4.53z",
+                    },
+                  },
+                ],
+                align: "right",
+                position: 0,
+                action: (editor) => {
+                  editor.togglePanel("objects");
+                },
+              },
+              {
+                type: "button",
+                icon: [
+                  {
+                    tag: "path",
+                    attr: {
+                      d: "M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z",
+                    },
+                  },
+                ],
+                align: "left",
+                buttonVariant: "outline",
+                menuItems: [
+                  {
+                    action: (editor) => {
+                      editor.tools.import.uploadAndReplaceMainImage();
+                    },
+                    label: "Background Image",
+                  },
+                  {
+                    action: (editor) => {
+                      editor.tools.import.uploadAndAddImage();
+                    },
+                    label: "Overlay Image",
+                  },
+                  {
+                    action: (editor) => {
+                      editor.tools.import.uploadAndOpenStateFile();
+                    },
+                    label: "Editor Project File",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      });
+      window.pixie = pixie;
+      setTimeout(function() {
+        initCanvas();
+      }, 5000); // 1000 milliseconds (1 second) delay
+
+    </script>
+
   </body>
 </html>
